@@ -1,0 +1,11 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+HotwiredBooks/node_modules/
+
+HotwiredBooks/wwwroot/js/
+HotwiredBooks/wwwroot/css/
+HotwiredBooks/.parcel-cache/

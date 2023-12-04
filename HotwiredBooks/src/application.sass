@@ -1,0 +1,94 @@
+body
+  margin: auto
+  width: fit-content
+
+.header
+  margin-top: 2rem
+  padding: 2rem 0
+  display: grid
+  grid-template: 'heading link' / 1fr 120px
+  align-items: center
+
+.heading
+  margin: 0
+
+.new-book-link
+  justify-self: end
+  color: rgb(255, 54, 54)
+
+.new-book-link:hover
+  filter: brightness(60%)
+
+.books
+  display: grid
+  padding: 1rem
+  border: #666666 1px solid
+  border-radius: 4px
+  background-color: #e0e0e0
+
+.book
+  display: grid
+  grid-template: 'title title' 'author author' 'action-left action-right' / 1fr 1fr
+  grid-gap: 0.5rem
+  margin-bottom: 1rem
+  padding: 0.5rem
+  border: rgb(255, 86, 86) 1px solid
+  border-radius: 4px
+  background-color: rgba(255, 86, 86, 0.2)
+
+.title
+  grid-area: title
+  margin: 0
+
+.author
+  grid-area: author
+  margin: 0
+
+.book-form
+  display: grid
+  grid-template: 'title title' 'author author' 'errors errors' 'action-left action-right' / 1fr 1fr
+  grid-gap: 0.5rem
+  margin-bottom: 1rem
+  padding: 0.5rem
+  border: rgb(255, 86, 86) 1px solid
+  border-radius: 4px
+  background-color: rgba(255, 86, 86, 0.2)
+
+.errors
+  grid-area: errors
+
+.action-left
+  grid-area: action-left
+  justify-self: start
+
+.action-right
+  grid-area: action-right
+  justify-self: end
+
+.book > .button_to
+  justify-self: end
+
+.button
+  border: #666666 1px solid
+  border-radius: 2px
+  text-decoration: none
+  color: black
+  padding: 0.25rem 0.5rem
+
+.button.primary
+  background-color: rgb(126, 229, 128)
+
+.button.primary:hover
+  filter: brightness(80%)
+
+.button.secondary
+  background-color: rgba(203, 203, 203)
+
+.button.secondary:hover
+  filter: brightness(80%)
+
+.button.danger
+  background-color: rgb(255, 86, 86)
+
+.button.danger:hover
+  filter: brightness(80%)

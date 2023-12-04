@@ -1,0 +1,25 @@
+{
+  "name": "hotwiredbooks",
+  "version": "1.0.0",
+  "js": "wwwroot/js/application.js",
+  "css": "wwwroot/css/application.css",
+  "targets": {
+    "js": {
+      "source": "src/application.ts"
+    },
+    "css": {
+      "source": "src/application.sass"
+    }
+  },
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.10.3",
+    "parcel": "^2.10.3"
+  },
+  "dependencies": {
+    "@hotwired/turbo": "^8.0.0-beta.1"
+  }
+}
