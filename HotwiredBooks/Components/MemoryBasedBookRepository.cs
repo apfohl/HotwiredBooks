@@ -71,7 +71,7 @@ public sealed class MemoryBasedBookRepository : IBooksRepository
 
     private static KeyValuePair<Guid, Book> CreateBook(string title, string author)
     {
-        var book = new Book(new Guid(), title, author);
+        var book = new Book(Guid.NewGuid(), title, author);
 
         return KeyValuePair.Create(book.Id, book);
     }

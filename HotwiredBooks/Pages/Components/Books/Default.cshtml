@@ -1,0 +1,14 @@
+@model IEnumerable<HotwiredBooks.Models.Book>
+
+<div class="header">
+    <h1 class="heading">Books (@Model.Count())</h1>
+
+    <a class="new-book-link">New book</a>
+</div>
+
+<div class="books">
+    @foreach (var book in Model)
+    {
+        <vc:book book="@book"></vc:book>
+    }
+</div>

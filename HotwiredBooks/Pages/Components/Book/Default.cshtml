@@ -1,0 +1,18 @@
+@model HotwiredBooks.Models.Book
+
+<div class="book">
+    <p class="title">@Model.Title</p>
+    <p class="author">@Model.Author</p>
+    <div class="action-left">
+        <form class="button_to" method="get" action="/books/23/edit">
+            <button class="button secondary" type="submit">Edit this book</button>
+        </form>
+    </div>
+    <div class="action-right">
+        <form class="button_to" method="post" action="/books/23">
+            <input type="hidden" name="_method" value="delete" autocomplete="off">
+            <button class="button danger" type="submit">Destroy this book</button>
+            <input type="hidden" name="authenticity_token" value="ct627Tj4nwbVR2LSgMdzUJqCZ2rwSj2LbgEEO8WwAP0IJgiVstSSiLv1il1dXTxKtMZjfgGhOrY9nBr3vMdvCg" autocomplete="off">
+        </form>
+    </div>
+</div>

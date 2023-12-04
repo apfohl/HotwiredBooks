@@ -1,6 +1,9 @@
+using HotwiredBooks.Components;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+builder.Services.AddTransient<IBooksRepository, MemoryBasedBookRepository>();
 
 var application = builder.Build();
 
