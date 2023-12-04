@@ -1,7 +1,9 @@
 @model HotwiredBooks.Models.Book
 
 <div class="book">
-    <p class="title">@Model.Title</p>
+    <p class="title">
+        <strong>Title:</strong> @Model.Title
+    </p>
     <p class="author">@Model.Author</p>
     <div class="action-left">
         <form class="button_to" method="get" action="/books/23/edit">
