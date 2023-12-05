@@ -1,10 +1,12 @@
 using HotwiredBooks.Components;
+using HotwiredBooks.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotwiredBooks.ViewComponents;
 
-public sealed class BooksViewComponent(IBooksRepository booksRepository) : ViewComponent
+public sealed record BooksData(IEnumerable<Book> Books);
+
+public sealed class BooksViewComponent : ViewComponent
 {
-    public async Task<IViewComponentResult> InvokeAsync() =>
-        View((await booksRepository.All()).OrderBy(book => book.Title));
+    public IViewComponentResult Invoke(BooksData booksData) => View(booksData);
 }

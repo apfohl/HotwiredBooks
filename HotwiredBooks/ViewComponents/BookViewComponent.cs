@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotwiredBooks.ViewComponents;
 
+public sealed record BookData(Book Book);
+
 public sealed class BookViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke(Book book) =>
-        View(book);
+    public IViewComponentResult Invoke(BookData bookData) => View(bookData);
 }

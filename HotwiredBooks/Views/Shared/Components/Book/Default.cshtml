@@ -1,0 +1,22 @@
+@model HotwiredBooks.ViewComponents.BookData
+
+<turbo-frame id="book_@Model.Book.Id">
+    <div class="book">
+        <p class="title">
+            <strong>Title:</strong> @Model.Book.Title
+        </p>
+        <p class="author">
+            <strong>Title:</strong> @Model.Book.Author
+        </p>
+        <div class="action-left">
+            <form asp-page="/Index/Edit" method="get" class="button_to">
+                <button class="button secondary" type="submit">Edit this book</button>
+            </form>
+        </div>
+        <div class="action-right">
+            <form asp-page="/Index/Delete" method="post" class="button_to">
+                <button class="button danger" type="submit">Delete this book</button>
+            </form>
+        </div>
+    </div>
+</turbo-frame>

@@ -1,0 +1,7 @@
+﻿@model HotwiredBooks.Models.BooksViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<vc:header header-data="@Model.HeaderData"></vc:header>
+<vc:books books-data="@Model.BooksData"></vc:books>
