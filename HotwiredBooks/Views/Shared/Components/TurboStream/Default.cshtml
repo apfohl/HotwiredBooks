@@ -1,0 +1,6 @@
+@using Microsoft.AspNetCore.Html
+@model HotwiredBooks.ViewComponents.TurboStreamViewData
+
+<turbo-stream action="@Model.Action" target="@Model.Target">
+    @Model.Template.Map(Html.Raw).Match(template => template, () => new HtmlString(string.Empty))
+</turbo-stream>

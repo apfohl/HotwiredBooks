@@ -15,18 +15,18 @@ internal sealed record Update(Book Book) : IBooksCommand;
 
 internal sealed record Delete(Book Book) : IBooksCommand;
 
-public sealed class MemoryBasedBookRepository : IBooksRepository
+public sealed class MemoryBasedBooksRepository : IBooksRepository
 {
     private readonly IAgent<IBooksCommand, Maybe<Book>> agent;
     private readonly ConcurrentDictionary<Guid, Book> books = new(InitialBooks());
 
-    public MemoryBasedBookRepository() =>
+    public MemoryBasedBooksRepository() =>
         agent = Agent.Start<ConcurrentDictionary<Guid, Book>, IBooksCommand, Maybe<Book>>(
             books,
             (current, command) => command switch
             {
                 Create create => Task.FromResult((current,
-                    from book in new Book(new Guid(), create.Title, create.Author).Just()
+                    from book in new Book(Guid.NewGuid(), create.Title, create.Author).Just()
                     from createdBook in current.TryAdd(book.Id, book) ? book.Just() : Nothing
                     select createdBook)),
                 Delete delete => Task.FromResult((current,

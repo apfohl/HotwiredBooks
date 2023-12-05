@@ -2,8 +2,8 @@ using HotwiredBooks.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<IBooksRepository, MemoryBasedBookRepository>();
+builder.Services.AddControllersWithViews(options => options.OutputFormatters.Add(new TurboStreamOutputFormatter()));
+builder.Services.AddSingleton<IBooksRepository, MemoryBasedBooksRepository>();
 
 var application = builder.Build();
 

@@ -3,5 +3,5 @@
 <turbo-frame class="header" id="books_heading">
     <h1 class="heading">Books (@Model.NumberOfBooks)</h1>
 
-    <a class="new-book-link">New book</a>
+    <a asp-controller="Books" asp-action="Create" data-turbo-frame="new_book" class="new-book-link">New book</a>
 </turbo-frame>
