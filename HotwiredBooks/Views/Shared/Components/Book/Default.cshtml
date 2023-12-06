@@ -1,12 +1,12 @@
-@model HotwiredBooks.ViewComponents.BookData
+@model HotwiredBooks.ViewModels.BookViewModel
 
-<turbo-frame id="book_@Model.Book.Id">
+<turbo-frame id="book_@Model.Id">
     <div class="book">
         <p class="title">
-            <strong>Title:</strong> @Model.Book.Title
+            <strong>Title:</strong> @Model.Title
         </p>
         <p class="author">
-            <strong>Author:</strong> @Model.Book.Author
+            <strong>Author:</strong> @Model.Author
         </p>
         <div class="action-left">
             <form asp-page="/Index/Edit" method="get" class="button_to">

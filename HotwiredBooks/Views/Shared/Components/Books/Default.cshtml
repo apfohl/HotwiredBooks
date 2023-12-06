@@ -1,11 +1,9 @@
 @using HotwiredBooks.ViewComponents
-@model HotwiredBooks.ViewComponents.BooksData
+@model HotwiredBooks.ViewModels.BooksViewModel
 
-<turbo-frame class="books" id="books">
-    <turbo-frame id="new_book"></turbo-frame>
+<turbo-frame id="new_book" />
 
-    @foreach (var book in Model.Books.Select(book => new BookData(book)))
-    {
-        <vc:book book-data="@book"></vc:book>
-    }
-</turbo-frame>
+@foreach (var book in Model.Books)
+{
+    <vc:book book="@book" />
+}

@@ -1,29 +1,26 @@
+using HotwiredBooks.Attributes;
 using HotwiredBooks.Components;
-using HotwiredBooks.Extensions;
 using HotwiredBooks.Models;
-using HotwiredBooks.ViewComponents;
+using HotwiredBooks.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using MonadicBits;
 
 namespace HotwiredBooks.Controllers;
 
 using static Functional;
 
-public sealed class BooksController(IBooksRepository booksRepository, ITempDataProvider tempDataProvider)
-    : Controller
+public sealed class BooksController(IBooksRepository booksRepository) : Controller
 {
-    // GET: BooksController
-    public async Task<ActionResult> Index() => View(
-        new BooksViewModel((await booksRepository.All()).OrderBy(book => book.Title))
-    );
+    [HttpGet]
+    public async Task<ActionResult> Index() => View(new BooksIndexViewModel(
+        (await booksRepository.All()).OrderBy(book => book.Title)));
 
-    // GET: BooksController/Create
-    public ActionResult Create() => View();
+    [HttpGet]
+    public ActionResult New() => View();
 
-    // POST: BooksController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [TurboStreamResponse]
     public async Task<ActionResult> Create(IFormCollection collection)
     {
         var formData =
@@ -36,25 +33,16 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             () => Task.FromResult<Maybe<Book>>(Nothing)
         );
 
-        var htmlElements = new[]
-        {
-            await TurboStream("books_heading", TurboStreamAction.Update,
-                (await Header((await booksRepository.All()).Count())).Just()),
-            await TurboStream("new_book", TurboStreamAction.Update, string.Empty.Just()),
-            await TurboStream("new_book", TurboStreamAction.After,
-                (await Book(book.Match(b => b, () => throw new ArgumentException()))).Just())
-        };
-
-        HttpContext.SetTurboStreamMimeType();
-
-        return Ok(string.Concat(htmlElements));
+        return View(new BookCreateViewModel(
+            book.Match(b => b, () => throw new ArgumentException()),
+            (await booksRepository.All()).Count())
+        );
     }
 
-    // GET: BooksController/Edit/5
+    [HttpGet]
     public ActionResult Edit(int id) =>
         throw new NotImplementedException();
 
-    // POST: BooksController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Edit(int id, IFormCollection collection)
@@ -69,7 +57,6 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
         }
     }
 
-    // POST: BooksController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Delete(int id, IFormCollection collection)
@@ -82,23 +69,5 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
         {
             throw new NotImplementedException();
         }
-    }
-
-    private Task<string> TurboStream(string target, TurboStreamAction action, Maybe<string> template)
-    {
-        var renderer = new ViewComponentStringRenderer(ControllerContext, tempDataProvider);
-        return renderer.RenderAsync("TurboStream", new { target, action, template });
-    }
-
-    private Task<string> Header(int numberOfBooks)
-    {
-        var renderer = new ViewComponentStringRenderer(ControllerContext, tempDataProvider);
-        return renderer.RenderAsync("Header", new { headerData = new HeaderData(numberOfBooks) });
-    }
-
-    private Task<string> Book(Book book)
-    {
-        var renderer = new ViewComponentStringRenderer(ControllerContext, tempDataProvider);
-        return renderer.RenderAsync("Book", new { bookData = new BookData(book) });
     }
 }

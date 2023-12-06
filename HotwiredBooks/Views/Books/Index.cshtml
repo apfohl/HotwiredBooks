@@ -1,7 +1,12 @@
-﻿@model HotwiredBooks.Models.BooksViewModel
+﻿@model HotwiredBooks.ViewModels.BooksIndexViewModel
 @{
     ViewData["Title"] = "Index";
 }
 
-<vc:header header-data="@Model.HeaderData"></vc:header>
-<vc:books books-data="@Model.BooksData"></vc:books>
+<turbo-frame class="header" id="books_heading">
+    <vc:header number-of-books="@Model.NumberOfBooks"/>
+</turbo-frame>
+
+<turbo-frame class="books" id="books">
+    <vc:books books="@Model.Books"/>
+</turbo-frame>

@@ -1,7 +1,5 @@
-@model HotwiredBooks.ViewComponents.HeaderData
+@model HotwiredBooks.ViewModels.HeaderViewModel
 
-<turbo-frame class="header" id="books_heading">
-    <h1 class="heading">Books (@Model.NumberOfBooks)</h1>
+<h1 class="heading">Books (@Model.NumberOfBooks)</h1>
 
-    <a asp-controller="Books" asp-action="Create" data-turbo-frame="new_book" class="new-book-link">New book</a>
-</turbo-frame>
+<a asp-controller="Books" asp-action="New" data-turbo-frame="new_book" class="new-book-link">New book</a>

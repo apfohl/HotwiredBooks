@@ -14,12 +14,12 @@ public static class MemoryBasedBookRepositoryTests
         const string author = "DEF";
 
         var maybe = await repository.Create(title, author);
-        maybe.Match(book =>
+        maybe.Match(book => Assert.Multiple(() =>
             {
                 Assert.That(book.Title, Is.EqualTo(title));
                 Assert.That(book.Author, Is.EqualTo(author));
                 Assert.That(book.Id, Is.Not.EqualTo(new Guid()));
-            },
+            }),
             Assert.Fail
         );
 

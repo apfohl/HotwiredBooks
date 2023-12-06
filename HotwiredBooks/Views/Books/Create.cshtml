@@ -1,23 +1,15 @@
-@model HotwiredBooks.Models.BooksViewModel
+@using HotwiredBooks.ViewComponents
+@model HotwiredBooks.ViewModels.BookCreateViewModel
+@{
+    Layout = null;
+}
 
-<turbo-frame id="new_book">
-    <form asp-controller="Books" asp-action="Create" method="post" accept-charset="UTF-8" class="book-form">
-        <div class="form-field title">
-            <label style="display: block" for="title">Title</label>
-            <input type="text" name="title" id="title"/>
-        </div>
+<turbo-stream action="Update" target="books_heading">
+    <vc:header number-of-books="@Model.NumberOfBooks"/>
+</turbo-stream>
 
-        <div class="form-field author">
-            <label style="display: block" for="author">Author</label>
-            <input type="text" name="author" id="author"/>
-        </div>
+<turbo-stream action="Update" target="new_book"/>
 
-        <div class="action-left">
-            <a class="button secondary" asp-controller="Books" asp-action="Index">Cancel</a>
-        </div>
-
-        <div class="action-right">
-            <input type="submit" name="commit" value="Submit" class="button primary" data-disable-with="Submit"/>
-        </div>
-    </form>
-</turbo-frame>
+<turbo-stream action="After" target="new_book">
+    <vc:book book="Model.Book"/>
+</turbo-stream>

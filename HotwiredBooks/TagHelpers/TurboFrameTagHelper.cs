@@ -7,15 +7,11 @@ namespace HotwiredBooks.TagHelpers;
 [HtmlTargetElement("turbo-frame")]
 public sealed class TurboFrameTagHelper : TagHelper
 {
-    [HtmlAttributeName("id")]
-    public string Id { get; set; }
+    [HtmlAttributeName("id")] public string Id { get; set; }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        var tagBuilder = new TagBuilder("turbo-frame");
-
-        tagBuilder.Attributes.Add("id", Id);
-
-        output.MergeAttributes(tagBuilder);
+        output.Attributes.Add("id", Id);
+        output.TagMode = TagMode.StartTagAndEndTag;
     }
 }
