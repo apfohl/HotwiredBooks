@@ -1,0 +1,10 @@
+@model HotwiredBooks.ViewModels.BooksDeleteViewModel
+@{
+    Layout = null;
+}
+
+<turbo-stream action="Update" target="books_heading">
+    <vc:header number-of-books="@Model.NumberOfBooks"/>
+</turbo-stream>
+
+<turbo-stream action="Remove" target="book_@Model.Book.Id"/>

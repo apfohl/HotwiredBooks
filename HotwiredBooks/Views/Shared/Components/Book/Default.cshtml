@@ -14,7 +14,8 @@
             </form>
         </div>
         <div class="action-right">
-            <form asp-page="/Index/Delete" method="post" class="button_to">
+            <form asp-controller="Books" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="button_to">
+                <input type="hidden" name="_method" value="DELETE" />
                 <button class="button danger" type="submit">Delete this book</button>
             </form>
         </div>

@@ -1,4 +1,5 @@
 using HotwiredBooks.Components;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ application.UseHttpsRedirection();
 application.UseStaticFiles();
 application.UseRouting();
 application.UseAuthorization();
+application.UseMiddleware<HttpMethodOverrideMiddleware>();
 application.MapControllerRoute(
     name: "default",
     pattern: "{controller=Books}/{action=Index}/{id?}"

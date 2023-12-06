@@ -1,3 +1,4 @@
+using System.Reactive;
 using HotwiredBooks.Attributes;
 using HotwiredBooks.Components;
 using HotwiredBooks.Models;
@@ -33,7 +34,7 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
             () => Task.FromResult<Maybe<Book>>(Nothing)
         );
 
-        return View(new BookCreateViewModel(
+        return View(new BooksCreateViewModel(
             book.Match(b => b, () => throw new ArgumentException()),
             (await booksRepository.All()).Count())
         );
@@ -59,15 +60,18 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Delete(int id, IFormCollection collection)
-    {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            throw new NotImplementedException();
-        }
-    }
+    [TurboStreamResponse]
+    public async Task<ActionResult> Delete(Guid id) =>
+        await (await booksRepository
+                .Lookup(id)
+                .BindAsync(booksRepository.Delete))
+            .Match(
+                async book => View(
+                    new BooksDeleteViewModel(
+                        book,
+                        (await booksRepository.All()).Count()
+                    )
+                ),
+                () => throw new ArgumentException()
+            );
 }
