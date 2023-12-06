@@ -31,12 +31,10 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             from author in collection.TryGetValue("author", out var a) ? a.Just() : Nothing
             select (Title: title, Author: author);
 
-        await formData.Match(
+        var book = await formData.Match(
             fd => booksRepository.Create(fd.Title, fd.Author),
-            () => Task.CompletedTask
+            () => Task.FromResult<Maybe<Book>>(Nothing)
         );
-
-        HttpContext.SetTurboStreamMimeType();
 
         var htmlElements = new[]
         {
@@ -44,8 +42,10 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
                 (await Header((await booksRepository.All()).Count())).Just()),
             await TurboStream("new_book", TurboStreamAction.Update, string.Empty.Just()),
             await TurboStream("new_book", TurboStreamAction.After,
-                (await Books((await booksRepository.All()))).Just())
+                (await Book(book.Match(b => b, () => throw new ArgumentException()))).Just())
         };
+
+        HttpContext.SetTurboStreamMimeType();
 
         return Ok(string.Concat(htmlElements));
     }
@@ -96,9 +96,9 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
         return renderer.RenderAsync("Header", new { headerData = new HeaderData(numberOfBooks) });
     }
 
-    private Task<string> Books(IEnumerable<Book> books)
+    private Task<string> Book(Book book)
     {
         var renderer = new ViewComponentStringRenderer(ControllerContext, tempDataProvider);
-        return renderer.RenderAsync("Books", new { booksData = new BooksData(books) });
+        return renderer.RenderAsync("Book", new { bookData = new BookData(book) });
     }
 }
