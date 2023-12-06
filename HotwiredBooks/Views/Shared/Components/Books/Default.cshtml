@@ -1,7 +1,9 @@
+@using HotwiredBooks.Extensions
+@using HotwiredBooks.Models
 @using HotwiredBooks.ViewComponents
 @model HotwiredBooks.ViewModels.BooksViewModel
 
-<turbo-frame id="new_book" />
+<turbo-frame id="@Html.DomId(typeof(Book))" />
 
 @foreach (var book in Model.Books)
 {

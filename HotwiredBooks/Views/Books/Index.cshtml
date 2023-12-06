@@ -3,10 +3,10 @@
     ViewData["Title"] = "Index";
 }
 
-<turbo-frame class="header" id="books_heading">
+<turbo-frame class="header" id="books_header">
     <vc:header number-of-books="@Model.NumberOfBooks"/>
 </turbo-frame>
 
-<turbo-frame class="books" id="books">
+<div class="books">
     <vc:books books="@Model.Books"/>
-</turbo-frame>
+</div>

@@ -1,8 +1,10 @@
+@using HotwiredBooks.Extensions
+@using HotwiredBooks.Models
 @{
     Layout = null;
 }
 
-<turbo-frame id="new_book">
+<turbo-frame id="@Html.DomId(typeof(Book))">
     <form asp-controller="Books" asp-action="Create" method="post" accept-charset="UTF-8" class="book-form">
         <div class="form-field title">
             <label style="display: block" for="title">Title</label>

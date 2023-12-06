@@ -1,15 +1,17 @@
+@using HotwiredBooks.Extensions
+@using HotwiredBooks.Models
 @using HotwiredBooks.ViewComponents
 @model HotwiredBooks.ViewModels.BooksCreateViewModel
 @{
     Layout = null;
 }
 
-<turbo-stream action="Update" target="books_heading">
+<turbo-stream action="Update" target="books_header">
     <vc:header number-of-books="@Model.NumberOfBooks"/>
 </turbo-stream>
 
-<turbo-stream action="Update" target="new_book"/>
+<turbo-stream action="Update" target="@Html.DomId(typeof(Book))"/>
 
-<turbo-stream action="After" target="new_book">
+<turbo-stream action="After" target="@Html.DomId(typeof(Book))">
     <vc:book book="Model.Book"/>
 </turbo-stream>
