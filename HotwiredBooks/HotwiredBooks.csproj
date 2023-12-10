@@ -13,8 +13,4 @@
       <PackageReference Include="System.Reactive" Version="6.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Views\Shared\Components\TurboStream\Default.cshtml" />
-    </ItemGroup>
-
 </Project>

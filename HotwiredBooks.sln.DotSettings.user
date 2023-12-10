@@ -1,5 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/home/andreas/.cache/JetBrains/Rider2023.2/resharper-host/temp/Rider/vAny/CoverageData/_HotwiredBooks.-1353144979/Snapshot/snapshot.utdcvr</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=56f95705_002D69f0_002D4d78_002D9fec_002Db8596a7edfd4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Create_inserts_value_into_repository" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Project Location="/home/andreas/code/HotwiredBooks/HotwiredBooksTests" Presentation="&amp;lt;HotwiredBooksTests&amp;gt;" /&gt;
 &lt;/SessionState&gt;</s:String>
