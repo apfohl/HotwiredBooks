@@ -1,4 +1,3 @@
-using System.Reactive;
 using HotwiredBooks.Attributes;
 using HotwiredBooks.Components;
 using HotwiredBooks.Models;
@@ -12,6 +11,8 @@ using static Functional;
 
 public sealed class BooksController(IBooksRepository booksRepository) : Controller
 {
+    private record FormData(string Title, string Author);
+
     [HttpGet]
     public async Task<ActionResult> Index() => View(new BooksIndexViewModel(
         (await booksRepository.All()).OrderBy(book => book.Title)));
@@ -24,15 +25,11 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
     [TurboStreamResponse]
     public async Task<ActionResult> Create(IFormCollection collection)
     {
-        var formData =
-            from title in collection.TryGetValue("title", out var t) ? t.Just() : Nothing
-            from author in collection.TryGetValue("author", out var a) ? a.Just() : Nothing
-            select (Title: title, Author: author);
-
-        var book = await formData.Match(
-            fd => booksRepository.Create(fd.Title, fd.Author),
-            () => Task.FromResult<Maybe<Book>>(Nothing)
-        );
+        var book = await (await ParseFormData(collection))
+            .Match(
+                formData => booksRepository.Create(formData.Title, formData.Author),
+                () => Task.FromResult<Maybe<Book>>(Nothing)
+            );
 
         return View(new BooksCreateViewModel(
             book.Match(b => b, () => throw new ArgumentException()),
@@ -50,16 +47,23 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
 
     [HttpPatch, HttpPut]
     [ValidateAntiForgeryToken]
-    public ActionResult Update(Guid id, IFormCollection collection)
+    public async Task<ActionResult> Update(Guid id, IFormCollection collection)
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            throw new NotImplementedException();
-        }
+        var saveBook =
+            from formData in ParseFormData(collection)
+            from book in booksRepository.Lookup(id)
+            from updatedBook in booksRepository.Update(
+                book with
+                {
+                    Title = formData.Title,
+                    Author = formData.Author
+                }
+            )
+            select updatedBook;
+
+        var savedBook = await saveBook;
+
+        return Created();
     }
 
     [HttpPost]
@@ -78,4 +82,11 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
                 ),
                 () => throw new ArgumentException()
             );
+
+    private static Task<Maybe<FormData>> ParseFormData(IFormCollection collection) =>
+        Task.FromResult(
+            from title in collection.TryGetValue("title", out var t) ? t.Just() : Nothing
+            from author in collection.TryGetValue("author", out var a) ? a.Just() : Nothing
+            select new FormData(title, author)
+        );
 }
