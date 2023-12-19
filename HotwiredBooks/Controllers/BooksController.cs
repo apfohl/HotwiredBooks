@@ -4,13 +4,17 @@ using HotwiredBooks.Extensions;
 using HotwiredBooks.Models;
 using HotwiredBooks.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using MonadicBits;
 
 namespace HotwiredBooks.Controllers;
 
-public sealed class BooksController(IBooksRepository booksRepository) : Controller
+public sealed class BooksController(IBooksRepository booksRepository, ITempDataProvider tempDataProvider)
+    : Controller
 {
     private record FormData(string Title, string Author);
+
+    private ViewComponentRenderer ViewComponentRenderer => new(ControllerContext, tempDataProvider);
 
     [HttpGet]
     public async Task<IActionResult> Index() => View(new BooksIndexViewModel(
@@ -41,7 +45,6 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
 
     [HttpPatch, HttpPut]
     [ValidateAntiForgeryToken]
-    [TurboStreamResponse]
     public Task<IActionResult> Update(Guid id, IFormCollection collection) =>
         (
             from formData in ParseFormData(collection)
@@ -55,7 +58,7 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
             )
             select updatedBook
         )
-        .MapAsync<Book, IActionResult>(book => View(new BooksEditViewModel(book)))
+        .MapAsync(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
         .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPost]

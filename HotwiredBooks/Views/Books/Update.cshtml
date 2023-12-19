@@ -1,9 +1,0 @@
-@using HotwiredBooks.Extensions
-@model HotwiredBooks.ViewModels.BooksEditViewModel
-@{
-    Layout = null;
-}
-
-<turbo-stream action="Update" target="@Html.DomId(Model.Book)">
-    <vc:book book="@Model.Book"/>
-</turbo-stream>
