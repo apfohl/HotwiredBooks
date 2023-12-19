@@ -9,7 +9,7 @@
             <strong>Author:</strong> @Model.Author
         </p>
         <div class="action-left">
-            <form asp-page="/Index/Edit" method="get" class="button_to">
+            <form asp-controller="Books" asp-action="Edit" asp-route-id="@Model.Id" method="get" class="button_to">
                 <button class="button secondary" type="submit">Edit this book</button>
             </form>
         </div>

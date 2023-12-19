@@ -41,12 +41,16 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
     }
 
     [HttpGet]
-    public ActionResult Edit(int id) =>
-        throw new NotImplementedException();
+    public async Task<ActionResult> Edit(Guid id) =>
+        (await booksRepository.Lookup(id))
+        .Match(
+            book => View(new BooksEditViewModel(book)),
+            () => throw new ArgumentException()
+        );
 
-    [HttpPost]
+    [HttpPatch, HttpPut]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(int id, IFormCollection collection)
+    public ActionResult Update(Guid id, IFormCollection collection)
     {
         try
         {

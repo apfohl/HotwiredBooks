@@ -1,0 +1,34 @@
+@model HotwiredBooks.ViewModels.BookFormViewModel
+
+@{
+    var id = Model.Book.Map(book => book.Id).Match(id => id.ToString(), () => string.Empty);
+    var action = Model.Book.Match(_ => "Update", () => "Create");
+    var method = Model.Book.Match(_ => "put", () => "post");
+    var title = Model.Book.Map(book => book.Title).Match(title => title, () => string.Empty);
+    var author = Model.Book.Map(book => book.Author).Match(author => author, () => string.Empty);
+}
+
+<form asp-controller="Books"
+      asp-action="@action"
+      asp-route-id="@id"
+      method="@method"
+      accept-charset="UTF-8"
+      class="book-form">
+    <div class="form-field title">
+        <label style="display: block" for="title">Title</label>
+        <input type="text" name="title" id="title" value="@title"/>
+    </div>
+
+    <div class="form-field author">
+        <label style="display: block" for="author">Author</label>
+        <input type="text" name="author" id="author" value="@author"/>
+    </div>
+
+    <div class="action-left">
+        <a class="button secondary" asp-controller="Books" asp-action="Index">Cancel</a>
+    </div>
+
+    <div class="action-right">
+        <input type="submit" name="commit" value="Submit" class="button primary" data-disable-with="Submit"/>
+    </div>
+</form>

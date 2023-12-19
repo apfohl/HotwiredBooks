@@ -1,0 +1,10 @@
+@using HotwiredBooks.Extensions
+@using MonadicBits
+@model HotwiredBooks.ViewModels.BooksEditViewModel
+@{
+    Layout = null;
+}
+
+<turbo-frame id="@Html.DomId(Model.Book)">
+    <vc:book-form book="@Model.Book.Just()"/>
+</turbo-frame>
