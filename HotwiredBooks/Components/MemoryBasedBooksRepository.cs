@@ -9,7 +9,7 @@ using static Functional;
 
 internal interface IBooksCommand;
 
-internal sealed record Create(string Title, string Author) : IBooksCommand;
+internal sealed record Create(string Title, string Author, DateTime CreatedAt) : IBooksCommand;
 
 internal sealed record Update(Book Book) : IBooksCommand;
 
@@ -26,7 +26,7 @@ public sealed class MemoryBasedBooksRepository : IBooksRepository
             (current, command) => command switch
             {
                 Create create => Task.FromResult((current,
-                    from book in new Book(Guid.NewGuid(), create.Title, create.Author).Just()
+                    from book in new Book(Guid.NewGuid(), create.Title, create.Author, create.CreatedAt).Just()
                     from createdBook in current.TryAdd(book.Id, book) ? book.Just() : Nothing
                     select createdBook)),
                 Delete delete => Task.FromResult((current,
@@ -49,7 +49,7 @@ public sealed class MemoryBasedBooksRepository : IBooksRepository
         Task.FromResult<IEnumerable<Book>>(books.Values);
 
     public Task<Maybe<Book>> Create(string title, string author) =>
-        agent.Tell(new Create(title, author));
+        agent.Tell(new Create(title, author, DateTime.Now));
 
     public Task<Maybe<Book>> Update(Book book) =>
         agent.Tell(new Update(book));
@@ -71,7 +71,7 @@ public sealed class MemoryBasedBooksRepository : IBooksRepository
 
     private static KeyValuePair<Guid, Book> CreateBook(string title, string author)
     {
-        var book = new Book(Guid.NewGuid(), title, author);
+        var book = new Book(Guid.NewGuid(), title, author, DateTime.Now);
 
         return KeyValuePair.Create(book.Id, book);
     }

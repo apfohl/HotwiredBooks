@@ -14,7 +14,7 @@ public sealed class BooksController(IBooksRepository booksRepository) : Controll
 
     [HttpGet]
     public async Task<IActionResult> Index() => View(new BooksIndexViewModel(
-        (await booksRepository.All()).OrderBy(book => book.Title)));
+        (await booksRepository.All()).OrderByDescending(book => book.CreatedAt)));
 
     [HttpGet]
     public IActionResult New() => View();
