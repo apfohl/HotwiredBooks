@@ -1,11 +1,11 @@
 using System.Collections.Concurrent;
 using bridgefield.FoundationalBits;
 using HotwiredBooks.Models;
-using MonadicBits;
+using ErrorOr;
+using ErrorOr.Extensions;
+using HotwiredBooks.Extensions;
 
 namespace HotwiredBooks.Components;
-
-using static Functional;
 
 internal interface IBooksCommand;
 
@@ -17,44 +17,45 @@ internal sealed record Delete(Book Book) : IBooksCommand;
 
 public sealed class MemoryBasedBooksRepository : IBooksRepository
 {
-    private readonly IAgent<IBooksCommand, Maybe<Book>> agent;
+    private readonly IAgent<IBooksCommand, ErrorOr<Book>> agent;
     private readonly ConcurrentDictionary<Guid, Book> books = new(InitialBooks());
 
     public MemoryBasedBooksRepository() =>
-        agent = Agent.Start<ConcurrentDictionary<Guid, Book>, IBooksCommand, Maybe<Book>>(
+        agent = Agent.Start<ConcurrentDictionary<Guid, Book>, IBooksCommand, ErrorOr<Book>>(
             books,
             (current, command) => command switch
             {
-                Create create => Task.FromResult((current,
-                    from book in new Book(Guid.NewGuid(), create.Title, create.Author, create.CreatedAt).Just()
-                    from createdBook in current.TryAdd(book.Id, book) ? book.Just() : Nothing
-                    select createdBook)),
-                Delete delete => Task.FromResult((current,
-                    current.TryRemove(delete.Book.Id, out var deletedBook) ? deletedBook.Just() : Nothing)),
+                Create create => (current,
+                    from book in new Book(Guid.NewGuid(), create.Title, create.Author, create.CreatedAt).Success()
+                    from createdBook in current.TryAdd(book.Id, book) ? book.Success() : ErrorOr<Book>.From([Error.Failure()])
+                    select createdBook).AsTask(),
+                Delete delete => (current,
+                    current.TryRemove(delete.Book.Id, out var deletedBook) ? deletedBook.Success() : ErrorOr<Book>.From(
+                        [Error.Failure()])).AsTask(),
                 Update update => Task.FromResult((current,
                     from currentBook in current.TryGetValue(update.Book.Id, out var currentValue)
-                        ? currentValue.Just()
-                        : Nothing
+                        ? currentValue.Success()
+                        : ErrorOr<Book>.From([Error.Failure()])
                     from updatedBook in current.TryUpdate(update.Book.Id, update.Book, currentBook)
-                        ? update.Book.Just()
-                        : Nothing
+                        ? update.Book.Success()
+                        : ErrorOr<Book>.From([Error.Failure()])
                     select updatedBook)),
                 _ => throw new ArgumentOutOfRangeException(nameof(command))
             });
 
-    public Task<Maybe<Book>> Lookup(Guid id) =>
-        Task.FromResult(books.TryGetValue(id, out var book) ? book.Just() : Nothing);
+    public Task<ErrorOr<Book>> Lookup(Guid id) =>
+        Task.FromResult(books.TryGetValue(id, out var book) ? ErrorOrFactory.From(book) : Error.NotFound());
 
     public Task<IEnumerable<Book>> All() =>
         Task.FromResult<IEnumerable<Book>>(books.Values);
 
-    public Task<Maybe<Book>> Create(string title, string author) =>
+    public Task<ErrorOr<Book>> Create(string title, string author) =>
         agent.Tell(new Create(title, author, DateTime.Now));
 
-    public Task<Maybe<Book>> Update(Book book) =>
+    public Task<ErrorOr<Book>> Update(Book book) =>
         agent.Tell(new Update(book));
 
-    public Task<Maybe<Book>> Delete(Book book) =>
+    public Task<ErrorOr<Book>> Delete(Book book) =>
         agent.Tell(new Delete(book));
 
     private static IEnumerable<KeyValuePair<Guid, Book>> InitialBooks()

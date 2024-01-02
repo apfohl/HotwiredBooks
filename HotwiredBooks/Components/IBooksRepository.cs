@@ -1,13 +1,13 @@
 using HotwiredBooks.Models;
-using MonadicBits;
+using ErrorOr;
 
 namespace HotwiredBooks.Components;
 
 public interface IBooksRepository
 {
-    Task<Maybe<Book>> Lookup(Guid id);
+    Task<ErrorOr<Book>> Lookup(Guid id);
     Task<IEnumerable<Book>> All();
-    Task<Maybe<Book>> Create(string title, string author);
-    Task<Maybe<Book>> Update(Book book);
-    Task<Maybe<Book>> Delete(Book book);
+    Task<ErrorOr<Book>> Create(string title, string author);
+    Task<ErrorOr<Book>> Update(Book book);
+    Task<ErrorOr<Book>> Delete(Book book);
 }

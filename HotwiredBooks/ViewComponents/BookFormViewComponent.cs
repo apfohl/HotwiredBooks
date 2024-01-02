@@ -1,11 +1,11 @@
 using HotwiredBooks.Models;
 using HotwiredBooks.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using MonadicBits;
+using ErrorOr;
 
 namespace HotwiredBooks.ViewComponents;
 
 public sealed class BookFormViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke(Maybe<Book> book) => View(new BookFormViewModel(book));
+    public IViewComponentResult Invoke(ErrorOr<Book> book) => View(new BookFormViewModel(book));
 }

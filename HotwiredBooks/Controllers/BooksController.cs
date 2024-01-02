@@ -1,3 +1,5 @@
+using ErrorOr;
+using ErrorOr.Extensions;
 using HotwiredBooks.Attributes;
 using HotwiredBooks.Components;
 using HotwiredBooks.Extensions;
@@ -5,7 +7,6 @@ using HotwiredBooks.Models;
 using HotwiredBooks.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using MonadicBits;
 
 namespace HotwiredBooks.Controllers;
 
@@ -32,7 +33,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             from book in booksRepository.Create(formData.Title, formData.Author)
             select book
         )
-        .MapAsync<Book, IActionResult>(async book =>
+        .Select<Book, IActionResult>(async book =>
             View(new BooksCreateViewModel(book, (await booksRepository.All()).Count())))
         .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
@@ -40,7 +41,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
     public Task<IActionResult> Edit(Guid id) =>
         booksRepository
             .Lookup(id)
-            .MapAsync<Book, IActionResult>(book => View(new BooksEditViewModel(book)))
+            .Select<Book, IActionResult>(book => View(new BooksEditViewModel(book)))
             .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPatch, HttpPut]
@@ -58,7 +59,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             )
             select updatedBook
         )
-        .MapAsync(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
+        .Select(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
         .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPost]
@@ -67,15 +68,15 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
     public Task<IActionResult> Delete(Guid id) =>
         booksRepository
             .Lookup(id)
-            .BindAsync(booksRepository.Delete)
-            .MapAsync<Book, IActionResult>(async book =>
+            .SelectMany(booksRepository.Delete)
+            .Select<Book, IActionResult>(async book =>
                 View(new BooksDeleteViewModel(book, (await booksRepository.All()).Count())))
             .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
-    private static Task<Maybe<FormData>> ParseFormData(IFormCollection collection) =>
-        Task.FromResult(
-            from title in collection.JustGetValue("title")
-            from author in collection.JustGetValue("author")
-            select new FormData(title, author)
-        );
+    private static Task<ErrorOr<FormData>> ParseFormData(IFormCollection collection) =>
+    (
+        from title in collection.JustGetValue("title")
+        from author in collection.JustGetValue("author")
+        select new FormData(title, author)
+    ).AsTask();
 }

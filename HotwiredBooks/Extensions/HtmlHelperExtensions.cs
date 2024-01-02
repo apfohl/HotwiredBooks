@@ -1,7 +1,7 @@
 using System.Reflection;
+using ErrorOr.Extensions;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MonadicBits;
 
 namespace HotwiredBooks.Extensions;
 
@@ -12,12 +12,12 @@ public static class HtmlHelperExtensions
 
     public static string DomId(this IHtmlHelper htmlHelper, object @object, string prefix = null) =>
     (
-        from property in @object.GetType().GetProperty("Id").ToMaybe()
-        from value in property.GetValue(@object).ToMaybe()
+        from property in @object.GetType().GetProperty("Id").ToErrorOr()
+        from value in property.GetValue(@object).ToErrorOr()
         select value.ToString()
     ).Match(
         id => $"{DomClass(htmlHelper, @object, prefix)}{Join}{id}",
-        () => DomClass(htmlHelper, @object, prefix ?? New)
+        _ => DomClass(htmlHelper, @object, prefix ?? New)
     );
 
     public static string DomClass(this IHtmlHelper _, object objectOrType, string prefix = null)

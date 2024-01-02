@@ -1,10 +1,11 @@
 @using HotwiredBooks.Extensions
-@using MonadicBits
+@using HotwiredBooks.TagHelpers
+@using HotwiredBooks.ViewComponents
 @model HotwiredBooks.ViewModels.BooksEditViewModel
 @{
     Layout = null;
 }
 
 <turbo-frame id="@Html.DomId(Model.Book)">
-    <vc:book-form book="@Model.Book.Just()"/>
+    <vc:book-form book="@Model.Book.Success()"/>
 </turbo-frame>

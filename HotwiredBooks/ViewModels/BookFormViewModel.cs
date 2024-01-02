@@ -1,6 +1,6 @@
 using HotwiredBooks.Models;
-using MonadicBits;
+using ErrorOr;
 
 namespace HotwiredBooks.ViewModels;
 
-public sealed record BookFormViewModel(Maybe<Book> Book);
+public sealed record BookFormViewModel(ErrorOr<Book> Book);

@@ -1,5 +1,5 @@
+using ErrorOr.Extensions;
 using HotwiredBooks.Components;
-using MonadicBits;
 
 namespace HotwiredBooksTests;
 
@@ -13,21 +13,21 @@ public static class MemoryBasedBookRepositoryTests
         const string title = "ABC";
         const string author = "DEF";
 
-        var maybe = await repository.Create(title, author);
-        maybe.Match(book => Assert.Multiple(() =>
+        var book = await repository.Create(title, author);
+        book.Switch(b => Assert.Multiple(() =>
             {
-                Assert.That(book.Title, Is.EqualTo(title));
-                Assert.That(book.Author, Is.EqualTo(author));
-                Assert.That(book.Id, Is.Not.EqualTo(new Guid()));
+                Assert.That(b.Title, Is.EqualTo(title));
+                Assert.That(b.Author, Is.EqualTo(author));
+                Assert.That(b.Id, Is.Not.EqualTo(new Guid()));
             }),
-            Assert.Fail
+            _ => Assert.Fail()
         );
 
         var areEqual =
-            from created in Task.FromResult(maybe)
+            from created in Task.FromResult(book)
             from read in repository.Lookup(created.Id)
             select created == read;
 
-        (await areEqual).Match(Assert.True, Assert.Fail);
+        (await areEqual).Switch(Assert.True, _ => Assert.Fail());
     }
 }
