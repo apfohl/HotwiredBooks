@@ -28,6 +28,6 @@ public static class MemoryBasedBookRepositoryTests
             from read in repository.Lookup(created.Id)
             select created == read;
 
-        (await areEqual).Switch(Assert.True, _ => Assert.Fail());
+        (await areEqual).Switch(_ => Assert.Pass(), _ => Assert.Fail());
     }
 }
