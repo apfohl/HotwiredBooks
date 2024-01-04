@@ -15,12 +15,12 @@ public static class HtmlHelperExtensionsTests
     {
         get
         {
-            yield return new object[] { typeof(BookWithId), null, "new_book_with_id" };
-            yield return new object[] { new BookWithId(Id), null, $"book_with_id_{Id}" };
-            yield return new object[] { new BookWithoutId(), null, "new_book_without_id" };
-            yield return new object[] { typeof(BookWithId), "header", "header_book_with_id" };
-            yield return new object[] { new BookWithId(Id), "header", $"header_book_with_id_{Id}" };
-            yield return new object[] { new BookWithoutId(), "header", "header_book_without_id" };
+            yield return [typeof(BookWithId), null, "new_book_with_id"];
+            yield return [new BookWithId(Id), null, $"book_with_id_{Id}"];
+            yield return [new BookWithoutId(), null, "new_book_without_id"];
+            yield return [typeof(BookWithId), "header", "header_book_with_id"];
+            yield return [new BookWithId(Id), "header", $"header_book_with_id_{Id}"];
+            yield return [new BookWithoutId(), "header", "header_book_without_id"];
         }
     }
 
@@ -36,12 +36,12 @@ public static class HtmlHelperExtensionsTests
     {
         get
         {
-            yield return new object[] { typeof(BookWithId), null, "book_with_id" };
-            yield return new object[] { new BookWithId(Id), null, "book_with_id" };
-            yield return new object[] { new BookWithoutId(), null, "book_without_id" };
-            yield return new object[] { typeof(BookWithId), "header", "header_book_with_id" };
-            yield return new object[] { new BookWithId(Id), "header", "header_book_with_id" };
-            yield return new object[] { new BookWithoutId(), "header", "header_book_without_id" };
+            yield return [typeof(BookWithId), null, "book_with_id"];
+            yield return [new BookWithId(Id), null, "book_with_id"];
+            yield return [new BookWithoutId(), null, "book_without_id"];
+            yield return [typeof(BookWithId), "header", "header_book_with_id"];
+            yield return [new BookWithId(Id), "header", "header_book_with_id"];
+            yield return [new BookWithoutId(), "header", "header_book_without_id"];
         }
     }
 
