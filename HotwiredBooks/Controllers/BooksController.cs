@@ -35,14 +35,14 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
         )
         .Select<Book, IActionResult>(async book =>
             View(new BooksCreateViewModel(book, (await booksRepository.All()).Count())))
-        .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
+        .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpGet]
     public Task<IActionResult> Edit(Guid id) =>
         booksRepository
             .Lookup(id)
             .Select<Book, IActionResult>(book => View(new BooksEditViewModel(book)))
-            .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
+            .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPatch, HttpPut]
     [ValidateAntiForgeryToken]
@@ -60,7 +60,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             select updatedBook
         )
         .Select(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
-        .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
+        .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -68,10 +68,10 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
     public Task<IActionResult> Delete(Guid id) =>
         booksRepository
             .Lookup(id)
-            .SelectMany(booksRepository.Delete)
+            .ThenAsync(booksRepository.Delete)
             .Select<Book, IActionResult>(async book =>
                 View(new BooksDeleteViewModel(book, (await booksRepository.All()).Count())))
-            .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
+            .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     private static Task<ErrorOr<FormData>> ParseFormData(IFormCollection collection) =>
     (
