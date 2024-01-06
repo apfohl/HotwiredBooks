@@ -33,15 +33,15 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             from book in booksRepository.Create(formData.Title, formData.Author)
             select book
         )
-        .Select<Book, IActionResult>(async book =>
-            View(new BooksCreateViewModel(book, (await booksRepository.All()).Count())))
+        .ThenAsync(async book =>
+            View(new BooksCreateViewModel(book, (await booksRepository.All()).Count())) as IActionResult)
         .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpGet]
     public Task<IActionResult> Edit(Guid id) =>
         booksRepository
             .Lookup(id)
-            .Select<Book, IActionResult>(book => View(new BooksEditViewModel(book)))
+            .Then(book => View(new BooksEditViewModel(book)) as IActionResult)
             .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPatch, HttpPut]
@@ -59,7 +59,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             )
             select updatedBook
         )
-        .Select(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
+        .ThenAsync(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
         .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPost]
@@ -69,8 +69,8 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
         booksRepository
             .Lookup(id)
             .ThenAsync(booksRepository.Delete)
-            .Select<Book, IActionResult>(async book =>
-                View(new BooksDeleteViewModel(book, (await booksRepository.All()).Count())))
+            .ThenAsync(async book =>
+                View(new BooksDeleteViewModel(book, (await booksRepository.All()).Count())) as IActionResult)
             .Else(StatusCode(500, "An unexpected error occurred on the server."));
 
     private static Task<ErrorOr<FormData>> ParseFormData(IFormCollection collection) =>

@@ -1,12 +1,11 @@
-@using ErrorOr.Extensions
 @model HotwiredBooks.ViewModels.BookFormViewModel
 
 @{
-    var id = Model.Book.Select(book => book.Id).Match(id => id.ToString(), _ => string.Empty);
+    var id = Model.Book.Then(book => book.Id.ToString()).Else(string.Empty);
     var action = Model.Book.Match(_ => "Update", _ => "Create");
     var method = Model.Book.Match(_ => "put", _ => "post");
-    var title = Model.Book.Select(book => book.Title).Match(title => title, _ => string.Empty);
-    var author = Model.Book.Select(book => book.Author).Match(author => author, _ => string.Empty);
+    var title = Model.Book.Then(book => book.Title).Else(string.Empty);
+    var author = Model.Book.Then(book => book.Author).Else(string.Empty);
 }
 
 <form asp-controller="Books"
