@@ -1,11 +1,13 @@
+@using AwesomeResult
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model HotwiredBooks.ViewModels.BookFormViewModel
 
 @{
-    var id = Model.Book.Then(book => book.Id.ToString()).Else(string.Empty);
+    var id = Model.Book.Map(book => book.Id.ToString()).OrElse(string.Empty);
     var action = Model.Book.Match(_ => "Update", _ => "Create");
     var method = Model.Book.Match(_ => "put", _ => "post");
-    var title = Model.Book.Then(book => book.Title).Else(string.Empty);
-    var author = Model.Book.Then(book => book.Author).Else(string.Empty);
+    var title = Model.Book.Map(book => book.Title).OrElse(string.Empty);
+    var author = Model.Book.Map(book => book.Author).OrElse(string.Empty);
 }
 
 <form asp-controller="Books"

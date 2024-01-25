@@ -1,7 +1,7 @@
 using System.Reflection;
-using ErrorOr.Extensions;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using AwesomeResult;
 
 namespace HotwiredBooks.Extensions;
 
@@ -12,8 +12,8 @@ public static class HtmlHelperExtensions
 
     public static string DomId(this IHtmlHelper htmlHelper, object @object, string prefix = null) =>
     (
-        from property in @object.GetType().GetProperty("Id").ToErrorOr()
-        from value in property.GetValue(@object).ToErrorOr()
+        from property in @object.GetType().GetProperty("Id").ResultNotNull()
+        from value in property.GetValue(@object).ResultNotNull()
         select value.ToString()
     ).Match(
         id => $"{DomClass(htmlHelper, @object, prefix)}{Join}{id}",

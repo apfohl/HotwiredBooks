@@ -1,9 +1,7 @@
-using ErrorOr;
-using ErrorOr.Extensions;
+using AwesomeResult;
 using HotwiredBooks.Attributes;
 using HotwiredBooks.Components;
 using HotwiredBooks.Extensions;
-using HotwiredBooks.Models;
 using HotwiredBooks.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -33,16 +31,16 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             from book in booksRepository.Create(formData.Title, formData.Author)
             select book
         )
-        .ThenAsync(async book =>
+        .Map(async book =>
             View(new BooksCreateViewModel(book, (await booksRepository.All()).Count())) as IActionResult)
-        .Else(StatusCode(500, "An unexpected error occurred on the server."));
+        .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpGet]
     public Task<IActionResult> Edit(Guid id) =>
         booksRepository
             .Lookup(id)
-            .Then(book => View(new BooksEditViewModel(book)) as IActionResult)
-            .Else(StatusCode(500, "An unexpected error occurred on the server."));
+            .Map(book => View(new BooksEditViewModel(book)) as IActionResult)
+            .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPatch, HttpPut]
     [ValidateAntiForgeryToken]
@@ -59,8 +57,8 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             )
             select updatedBook
         )
-        .ThenAsync(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
-        .Else(StatusCode(500, "An unexpected error occurred on the server."));
+        .Map(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
+        .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -68,12 +66,12 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
     public Task<IActionResult> Delete(Guid id) =>
         booksRepository
             .Lookup(id)
-            .ThenAsync(booksRepository.Delete)
-            .ThenAsync(async book =>
+            .Bind(booksRepository.Delete)
+            .Map(async book =>
                 View(new BooksDeleteViewModel(book, (await booksRepository.All()).Count())) as IActionResult)
-            .Else(StatusCode(500, "An unexpected error occurred on the server."));
+            .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
-    private static Task<ErrorOr<FormData>> ParseFormData(IFormCollection collection) =>
+    private static Task<Result<FormData>> ParseFormData(IFormCollection collection) =>
     (
         from title in collection.JustGetValue("title")
         from author in collection.JustGetValue("author")

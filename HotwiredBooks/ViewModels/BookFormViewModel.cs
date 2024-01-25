@@ -1,6 +1,6 @@
+using AwesomeResult;
 using HotwiredBooks.Models;
-using ErrorOr;
 
 namespace HotwiredBooks.ViewModels;
 
-public sealed record BookFormViewModel(ErrorOr<Book> Book);
+public sealed record BookFormViewModel(Result<Book> Book);
