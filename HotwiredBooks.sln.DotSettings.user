@@ -3,9 +3,14 @@
   &lt;Assembly Path="/home/andreas/.nuget/packages/erroror/1.3.0/lib/net6.0/ErrorOr.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=56f95705_002D69f0_002D4d78_002D9fec_002Db8596a7edfd4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Create_inserts_value_into_repository" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/andreas/Developer/HotwiredBooks/HotwiredBooksTests" Presentation="&amp;lt;HotwiredBooksTests&amp;gt;" /&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=56f95705_002D69f0_002D4d78_002D9fec_002Db8596a7edfd4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Create_inserts_value_into_repository" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;NUnit3x::8CACA52D-A3E1-4F72-94DD-F267B74B9259::net8.0::HotwiredBooksTests.HtmlHelperExtensionsTests.DomId_creates_correct_id&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7a5365d0_002Db616_002D4d4b_002D83e3_002Df6bda9b641db/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Create_inserts_value_into_repository #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/andreas/Developer/HotwiredBooks/HotwiredBooksTests" Presentation="&amp;lt;HotwiredBooksTests&amp;gt;" /&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7a5365d0_002Db616_002D4d4b_002D83e3_002Df6bda9b641db/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Create_inserts_value_into_repository #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;NUnit3x::8CACA52D-A3E1-4F72-94DD-F267B74B9259::net8.0::HotwiredBooksTests.HtmlHelperExtensionsTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::8CACA52D-A3E1-4F72-94DD-F267B74B9259::net8.0::HotwiredBooksTests.MemoryBasedBookRepositoryTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

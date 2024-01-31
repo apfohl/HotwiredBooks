@@ -10,16 +10,17 @@ public static class MemoryBasedBookRepositoryTests
     public static async Task Create_inserts_value_into_repository()
     {
         var repository = new MemoryBasedBooksRepository();
+
         const string title = "ABC";
         const string author = "DEF";
 
         var book = await repository.Create(title, author);
-        book.Switch(b => Assert.Multiple(() =>
+        book.Switch(b =>
             {
-                Assert.That(b.Title, Is.EqualTo(title));
-                Assert.That(b.Author, Is.EqualTo(author));
-                Assert.That(b.Id, Is.Not.EqualTo(new Guid()));
-            }),
+                b.Title.Should().Be(title);
+                b.Author.Should().Be(author);
+                b.Id.Should().NotBe(Guid.Empty);
+            },
             _ => Assert.Fail()
         );
 
@@ -28,6 +29,6 @@ public static class MemoryBasedBookRepositoryTests
             from read in repository.Lookup(created.Id)
             select created == read;
 
-        (await areEqual).Switch(_ => Assert.Pass(), _ => Assert.Fail());
+        (await areEqual).Switch(eq => eq.Should().BeTrue(), _ => Assert.Fail());
     }
 }

@@ -29,7 +29,7 @@ public static class HtmlHelperExtensionsTests
     {
         var id = HtmlHelperExtensions.DomId(null, objectOrType, prefix);
 
-        Assert.That(id, Is.EqualTo(expectedId));
+        id.Should().Be(expectedId);
     }
 
     private static IEnumerable<object[]> DomClassTestCases
@@ -50,6 +50,6 @@ public static class HtmlHelperExtensionsTests
     {
         var @class = HtmlHelperExtensions.DomClass(null, objectOrType, prefix);
 
-        Assert.That(@class, Is.EqualTo(expectedClass));
+        @class.Should().Be(expectedClass);
     }
 }
