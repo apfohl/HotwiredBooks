@@ -31,7 +31,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             from book in booksRepository.Create(formData.Title, formData.Author)
             select book
         )
-        .Map(async book =>
+        .MapAsync(async book =>
             View(new BooksCreateViewModel(book, (await booksRepository.All()).Count())) as IActionResult)
         .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
@@ -39,7 +39,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
     public Task<IActionResult> Edit(Guid id) =>
         booksRepository
             .Lookup(id)
-            .Map(book => View(new BooksEditViewModel(book)) as IActionResult)
+            .MapAsync(book => View(new BooksEditViewModel(book)) as IActionResult)
             .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPatch, HttpPut]
@@ -57,7 +57,7 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
             )
             select updatedBook
         )
-        .Map(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
+        .MapAsync(book => ViewComponentRenderer.RenderAsync("Book", new BooksEditViewModel(book)))
         .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
     [HttpPost]
@@ -66,8 +66,8 @@ public sealed class BooksController(IBooksRepository booksRepository, ITempDataP
     public Task<IActionResult> Delete(Guid id) =>
         booksRepository
             .Lookup(id)
-            .Bind(booksRepository.Delete)
-            .Map(async book =>
+            .BindAsync(booksRepository.Delete)
+            .MapAsync(async book =>
                 View(new BooksDeleteViewModel(book, (await booksRepository.All()).Count())) as IActionResult)
             .OrElse(StatusCode(500, "An unexpected error occurred on the server."));
 
